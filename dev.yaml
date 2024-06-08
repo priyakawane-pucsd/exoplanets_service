@@ -1,0 +1,12 @@
+name: "exoplanets-service"
+controller:
+    port: 8083
+    ginmode: "release"
+    readtimeoutmillis: 500
+    writetimeoutmillis: 500
+    ping: {}
+service:
+    ping: {}
+repository:
+    name: "redis"
+    redis: {}
