@@ -15,7 +15,7 @@ type Config struct {
 
 type Service interface {
 	CreateExoplanets(ctx context.Context, req *dto.ExoplanetRequest) (*dto.Exoplanet, error)
-	GetExoplanets(ctx context.Context, limit, offset int) (*dto.ListExoplanetResponse, error)
+	GetExoplanets(ctx context.Context, radius, mass float64, limit, offset int) (*dto.ListExoplanetResponse, error)
 	GetExoplanetById(ctx context.Context, exoplanetId string) (*dto.ExoplanetByIdResponse, error)
 	UpdateExoplanetById(ctx context.Context, id string, exoplanet dto.ExoplanetRequest) error
 	DeleteExoplanetById(ctx context.Context, exoplanetId string) error
@@ -90,6 +90,8 @@ func (h *Handler) CreateExoplanets(ctx *gin.Context) {
 func (h *Handler) GetExoplanets(ctx *gin.Context) {
 	limitStr := ctx.DefaultQuery("limit", "10")
 	offsetStr := ctx.DefaultQuery("offset", "0")
+	radiusStr := ctx.DefaultQuery("radius", "0.0")
+	massStr := ctx.DefaultQuery("mass", "0.0")
 
 	// Parse limit into an integer
 	limit, err := strconv.Atoi(limitStr)
@@ -105,7 +107,19 @@ func (h *Handler) GetExoplanets(ctx *gin.Context) {
 		return
 	}
 
-	exoplanets, err := h.service.GetExoplanets(ctx, limit, offset)
+	radius, err := strconv.ParseFloat(radiusStr, 64)
+	if err != nil {
+		utils.WriteError(ctx, utils.NewBadRequestError("Invalid radius parameter"))
+		return
+	}
+
+	mass, err := strconv.ParseFloat(massStr, 64)
+	if err != nil {
+		utils.WriteError(ctx, utils.NewBadRequestError("Invalid mass parameter"))
+		return
+	}
+
+	exoplanets, err := h.service.GetExoplanets(ctx, radius, mass, limit, offset)
 	if err != nil {
 		utils.WriteError(ctx, err)
 		return
