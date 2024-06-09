@@ -40,6 +40,11 @@ definitions:
       type_of_exoplanet:
         type: string
     type: object
+  dto.FuelEstimationResponse:
+    properties:
+      estimatedFuel:
+        type: number
+    type: object
   dto.ListExoplanetResponse:
     properties:
       exoplanets:
@@ -74,12 +79,12 @@ paths:
         name: offset
         type: integer
       - default: 0
-        description: radius of exoplanet
+        description: Radius of the exoplanet
         in: query
         name: radius
         type: number
       - default: 0
-        description: mass of exoplanet
+        description: Mass of the exoplanet
         in: query
         name: mass
         type: number
@@ -89,9 +94,7 @@ paths:
         "200":
           description: List of exoplanets
           schema:
-            items:
-              $ref: '#/definitions/dto.ListExoplanetResponse'
-            type: array
+            $ref: '#/definitions/dto.ListExoplanetResponse'
         "400":
           description: Invalid request parameters
           schema:
@@ -118,9 +121,9 @@ paths:
       - application/json
       responses:
         "201":
-          description: Exoplanet created successfully
+          description: Created successfully
           schema:
-            type: string
+            $ref: '#/definitions/dto.Exoplanet'
         "400":
           description: Invalid request body
           schema:
@@ -239,7 +242,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Calculate fuel estimation about an exoplanet by its ID
+      description: Calculate fuel estimation for a trip to an exoplanet by its ID
       parameters:
       - description: Exoplanet ID
         in: path
@@ -247,7 +250,7 @@ paths:
         required: true
         type: string
       - default: 0
-        description: crea capacity of exoplanets returned
+        description: Crew capacity for the trip
         in: query
         name: crewCapacity
         type: integer
@@ -255,9 +258,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: Successful response containing exoplanet details
+          description: Successful response containing fuel estimation details
           schema:
-            $ref: '#/definitions/dto.ExoplanetByIdResponse'
+            $ref: '#/definitions/dto.FuelEstimationResponse'
         "400":
           description: Invalid request format
           schema:

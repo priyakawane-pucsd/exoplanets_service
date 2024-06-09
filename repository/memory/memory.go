@@ -74,6 +74,7 @@ func (*Repository) Ping(ctx context.Context) error {
 
 // UpdateExoplanetById implements service.Repository.
 func (r *Repository) UpdateExoplanetById(ctx context.Context, exoplanet *dao.Exoplanets, exoplanetId string) error {
+	exoplanet.ID = exoplanetId
 	r.exoplanets[exoplanet.ID] = *exoplanet
 	return nil
 }

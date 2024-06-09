@@ -46,14 +46,14 @@ const docTemplate = `{
                     {
                         "type": "number",
                         "default": 0,
-                        "description": "radius of exoplanet",
+                        "description": "Radius of the exoplanet",
                         "name": "radius",
                         "in": "query"
                     },
                     {
                         "type": "number",
                         "default": 0,
-                        "description": "mass of exoplanet",
+                        "description": "Mass of the exoplanet",
                         "name": "mass",
                         "in": "query"
                     }
@@ -62,10 +62,7 @@ const docTemplate = `{
                     "200": {
                         "description": "List of exoplanets",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/dto.ListExoplanetResponse"
-                            }
+                            "$ref": "#/definitions/dto.ListExoplanetResponse"
                         }
                     },
                     "400": {
@@ -107,9 +104,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Exoplanet created successfully",
+                        "description": "Created successfully",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.Exoplanet"
                         }
                     },
                     "400": {
@@ -284,7 +281,7 @@ const docTemplate = `{
         },
         "/exoplanetservice/exoplanets/{id}/fuel-estimation": {
             "get": {
-                "description": "Calculate fuel estimation about an exoplanet by its ID",
+                "description": "Calculate fuel estimation for a trip to an exoplanet by its ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -306,16 +303,16 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 0,
-                        "description": "crea capacity of exoplanets returned",
+                        "description": "Crew capacity for the trip",
                         "name": "crewCapacity",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful response containing exoplanet details",
+                        "description": "Successful response containing fuel estimation details",
                         "schema": {
-                            "$ref": "#/definitions/dto.ExoplanetByIdResponse"
+                            "$ref": "#/definitions/dto.FuelEstimationResponse"
                         }
                     },
                     "400": {
@@ -428,6 +425,14 @@ const docTemplate = `{
                 },
                 "type_of_exoplanet": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.FuelEstimationResponse": {
+            "type": "object",
+            "properties": {
+                "estimatedFuel": {
+                    "type": "number"
                 }
             }
         },

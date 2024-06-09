@@ -30,16 +30,18 @@ func (s *Service) GetExoplanetById(ctx context.Context, exoplanetId string) (*dt
 	return response, nil
 }
 
-func (s *Service) CalculateFuelEstimation(ctx context.Context, exoplanetId string, crewCapacity int) (float64, error) {
+func (s *Service) CalculateFuelEstimation(ctx context.Context, exoplanetId string, crewCapacity int) (*dto.FuelEstimationResponse, error) {
 	exoplanet, err := s.repo.GetExoplanetById(ctx, exoplanetId)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	if exoplanet.TypeOfExoplanet == dto.GAS_GIANT {
-		gravity := (0.5 / (math.Pow(exoplanet.Radius, 2)))
-		return float64(exoplanet.DistanceFromEarth) / (math.Pow(gravity, 2)) * float64(crewCapacity), nil
-
+	var gravity float64
+	switch exoplanet.TypeOfExoplanet {
+	case dto.GAS_GIANT:
+		gravity = (0.5 / (math.Pow(exoplanet.Radius, 2)))
+	case dto.TERRESTRIAL:
+		gravity = (exoplanet.Mass / (math.Pow(exoplanet.Radius, 2)))
 	}
-	gravity := (exoplanet.Mass / (math.Pow(exoplanet.Radius, 2)))
-	return float64(exoplanet.DistanceFromEarth) / (math.Pow(gravity, 2)) * float64(crewCapacity), nil
+	estimatedFuel := float64(exoplanet.DistanceFromEarth) / (math.Pow(gravity, 2)) * float64(crewCapacity)
+	return &dto.FuelEstimationResponse{EstimatedFuel: estimatedFuel}, nil
 }

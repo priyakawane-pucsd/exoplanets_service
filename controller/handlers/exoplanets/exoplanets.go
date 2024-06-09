@@ -20,7 +20,7 @@ type Service interface {
 	GetExoplanetById(ctx context.Context, exoplanetId string) (*dto.ExoplanetByIdResponse, error)
 	UpdateExoplanetById(ctx context.Context, id string, exoplanet dto.ExoplanetRequest) error
 	DeleteExoplanetById(ctx context.Context, exoplanetId string) error
-	CalculateFuelEstimation(ctx context.Context, exoplanetId string, crewCapacity int) (float64, error)
+	CalculateFuelEstimation(ctx context.Context, exoplanetId string, crewCapacity int) (*dto.FuelEstimationResponse, error)
 }
 
 type Handler struct {
@@ -48,7 +48,7 @@ func (h *Handler) Register(router gin.IRouter) {
 // @Accept json
 // @Produce json
 // @Param exoplanet body dto.ExoplanetRequest true "Exoplanet Request"
-// @Success 201 {object} string "Exoplanet created successfully"
+// @Success 201 {object} dto.Exoplanet "Created successfully"
 // @Failure 400 {object} utils.CustomError "Invalid request body"
 // @Failure 500 {object} utils.CustomError "Internal server error"
 // @Router /exoplanetservice/exoplanets [post]
@@ -84,9 +84,9 @@ func (h *Handler) CreateExoplanets(ctx *gin.Context) {
 // @Produce json
 // @Param limit query int false "Limit the number of exoplanets returned" default(10)
 // @Param offset query int false "Offset for pagination" default(0)
-// @Param radius query float64 false "radius of exoplanet" default(0.0)
-// @Param mass query float64 false "mass of exoplanet" default(0.0)
-// @Success 200 {array} dto.ListExoplanetResponse "List of exoplanets"
+// @Param radius query float64 false "Radius of the exoplanet" default(0.0)
+// @Param mass query float64 false "Mass of the exoplanet" default(0.0)
+// @Success 200 {object} dto.ListExoplanetResponse "List of exoplanets"
 // @Failure 400 {object} utils.CustomError "Invalid request parameters"
 // @Failure 500 {object} utils.CustomError "Internal server error"
 // @Router /exoplanetservice/exoplanets [get]
@@ -129,7 +129,6 @@ func (h *Handler) GetExoplanets(ctx *gin.Context) {
 		return
 	}
 	utils.WriteResponse(ctx, exoplanets)
-	//ctx.JSON(http.StatusOK, exoplanets)
 }
 
 // @Summary Get an exoplanet by ID
@@ -206,13 +205,13 @@ func (h *Handler) DeleteExoplanetById(ctx *gin.Context) {
 }
 
 // @Summary Calculate fuel estimation
-// @Description Calculate fuel estimation about an exoplanet by its ID
+// @Description Calculate fuel estimation for a trip to an exoplanet by its ID
 // @Tags Exoplanets
 // @Accept json
 // @Produce json
 // @Param id path string true "Exoplanet ID"
-// @Param crewCapacity query int false "crea capacity of exoplanets returned" default(0)
-// @Success 200 {object} dto.ExoplanetByIdResponse "Successful response containing exoplanet details"
+// @Param crewCapacity query int false "Crew capacity for the trip" default(0)
+// @Success 200 {object} dto.FuelEstimationResponse "Successful response containing fuel estimation details"
 // @Failure 400 {object} utils.CustomError "Invalid request format"
 // @Failure 404 {object} utils.CustomError "Exoplanet not found"
 // @Failure 500 {object} utils.CustomError "Internal server error"
@@ -230,10 +229,10 @@ func (h *Handler) CalculateFuelEstimation(ctx *gin.Context) {
 		return
 	}
 
-	exoplanet, err := h.service.CalculateFuelEstimation(ctx, exoplanetId, crewCapacity)
+	res, err := h.service.CalculateFuelEstimation(ctx, exoplanetId, crewCapacity)
 	if err != nil {
 		utils.WriteError(ctx, err)
 		return
 	}
-	utils.WriteResponse(ctx, exoplanet)
+	utils.WriteResponse(ctx, res)
 }

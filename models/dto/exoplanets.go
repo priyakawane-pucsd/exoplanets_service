@@ -30,3 +30,7 @@ type ExoplanetByIdResponse struct {
 type ListExoplanetResponse struct {
 	Exoplanets []*Exoplanet `json:"exoplanets"`
 }
+
+type FuelEstimationResponse struct {
+	EstimatedFuel float64 `json:"estimatedFuel"`
+}
