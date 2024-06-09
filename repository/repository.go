@@ -2,25 +2,32 @@ package repository
 
 import (
 	"context"
-	"exoplanetservice/repository/redis"
+	"exoplanetservice/repository/memory"
+	"exoplanetservice/repository/mongo"
 	"exoplanetservice/service"
 )
 
 const (
-	REDIS = "redis"
-	MONGO = "mongo"
-	MYSQL = "mysql"
+	MONGO  = "mongo"
+	MEMORY = "memory"
 )
 
 type Config struct {
-	Name  string
-	Redis redis.Config
+	Name   string
+	Mongo  mongo.Config
+	Memory memory.Config
+}
+
+type Repository interface {
+	service.Repository
 }
 
 func NewRepository(ctx context.Context, cfg *Config) service.Repository {
 	switch cfg.Name {
-	case REDIS:
-		return redis.NewRepository(ctx, &cfg.Redis)
+	case MONGO:
+		return mongo.NewRepository(ctx, &cfg.Mongo)
+	case MEMORY:
+		return memory.NewRepository(ctx, &cfg.Memory)
 	}
-	panic("invalid repository name , provided `" + cfg.Name + "` expected + `" + REDIS + "`")
+	panic("invalid repository name , provided `" + cfg.Name + "` expected + `" + MONGO + "`")
 }

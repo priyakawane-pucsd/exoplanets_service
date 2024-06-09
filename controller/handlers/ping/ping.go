@@ -25,6 +25,7 @@ func NewHandler(ctx context.Context, cfg *Config, service Service) *Handler {
 	}
 }
 
+// register func of handler
 func (h *Handler) Register(router gin.IRouter) {
 	router.GET("/ping", h.Ping)
 }
@@ -44,5 +45,5 @@ func (h *Handler) Ping(ctx *gin.Context) {
 		utils.WriteError(ctx, err)
 		return
 	}
-	utils.WriteSuccess(ctx, "Okay, I am alive!")
+	utils.WriteResponse(ctx, "Okay, I am alive!")
 }

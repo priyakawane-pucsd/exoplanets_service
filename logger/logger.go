@@ -19,7 +19,7 @@ func init() {
 
 }
 
-func Info(format string, a ...any) {
+func Info(ctx context.Context, format string, a ...any) {
 	zapLogger.Info(fmt.Sprintf(format, a...))
 }
 

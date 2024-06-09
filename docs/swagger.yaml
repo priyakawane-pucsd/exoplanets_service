@@ -1,6 +1,268 @@
+definitions:
+  dto.ExoplanetByIdResponse:
+    properties:
+      exoplanet:
+        $ref: '#/definitions/dto.ExoplanetDTO'
+    type: object
+  dto.ExoplanetDTO:
+    properties:
+      created_at:
+        type: integer
+      description:
+        type: string
+      distance_from_earth:
+        type: number
+      id:
+        type: string
+      mass:
+        type: number
+      name:
+        type: string
+      radius:
+        type: number
+      type_of_exoplanet:
+        type: string
+      updated_at:
+        type: integer
+    type: object
+  dto.ExoplanetRequest:
+    properties:
+      description:
+        type: string
+      distance_from_earth:
+        type: number
+      mass:
+        type: number
+      name:
+        type: string
+      radius:
+        type: number
+      type_of_exoplanet:
+        type: string
+    type: object
+  dto.ListExoplanetResponse:
+    properties:
+      exoplanets:
+        items:
+          $ref: '#/definitions/dto.ExoplanetDTO'
+        type: array
+    type: object
+  utils.CustomError:
+    properties:
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
+  /exoplanetservice/exoplanets:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a paginated list of exoplanets
+      parameters:
+      - default: 10
+        description: Limit the number of exoplanets returned
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of exoplanets
+          schema:
+            items:
+              $ref: '#/definitions/dto.ListExoplanetResponse'
+            type: array
+        "400":
+          description: Invalid request parameters
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Get a list of exoplanets
+      tags:
+      - Exoplanets
+    post:
+      consumes:
+      - application/json
+      description: Create a new exoplanet with the provided details
+      parameters:
+      - description: Exoplanet Request
+        in: body
+        name: exoplanet
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExoplanetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Exoplanet created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Create a new exoplanet
+      tags:
+      - Exoplanets
+  /exoplanetservice/exoplanets/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an exoplanet by its ID
+      parameters:
+      - description: Exoplanet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Exoplanet deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request format
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "404":
+          description: Exoplanet not found
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Delete an exoplanet by ID
+      tags:
+      - Exoplanets
+    get:
+      consumes:
+      - application/json
+      description: Retrieve detailed information about an exoplanet by its ID
+      parameters:
+      - description: Exoplanet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response containing exoplanet details
+          schema:
+            $ref: '#/definitions/dto.ExoplanetByIdResponse'
+        "400":
+          description: Invalid request format
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "404":
+          description: Exoplanet not found
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Get an exoplanet by ID
+      tags:
+      - Exoplanets
+    put:
+      consumes:
+      - application/json
+      description: Update an exoplanet by its ID
+      parameters:
+      - description: Exoplanet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Exoplanet Request
+        in: body
+        name: updateExoplanetRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExoplanetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Exoplanet updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request format
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "404":
+          description: Exoplanet not found
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Update an exoplanet by ID
+      tags:
+      - Exoplanets
+  /exoplanetservice/exoplanets/{id}/fuel-estimation:
+    get:
+      consumes:
+      - application/json
+      description: Calculate fuel estimation about an exoplanet by its ID
+      parameters:
+      - description: Exoplanet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: 0
+        description: crea capacity of exoplanets returned
+        in: query
+        name: crewCapacity
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response containing exoplanet details
+          schema:
+            $ref: '#/definitions/dto.ExoplanetByIdResponse'
+        "400":
+          description: Invalid request format
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "404":
+          description: Exoplanet not found
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Calculate fuel estimation
+      tags:
+      - Exoplanets
   /exoplanetservice/ping:
     get:
       consumes:

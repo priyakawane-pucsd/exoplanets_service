@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"exoplanetservice/controller/handlers/exoplanets"
 	"exoplanetservice/controller/handlers/ping"
 	"exoplanetservice/controller/handlers/swagger"
 	"exoplanetservice/logger"
@@ -20,6 +21,7 @@ type Config struct {
 	ReadTimeoutMillis  int
 	WriteTimeoutMillis int
 	Ping               ping.Config
+	Exoplanet          exoplanets.Config
 }
 
 type Controller struct {
@@ -34,15 +36,16 @@ func NewController(ctx context.Context, c *Config, sf *service.ServiceFactory) *
 
 func (c *Controller) registerHandlers(ctx context.Context, router gin.IRouter) {
 	ping.NewHandler(ctx, &c.conf.Ping, c.serviceFactory.PingService).Register(router)
+	exoplanets.NewHandler(ctx, &c.conf.Exoplanet, c.serviceFactory.ExoplanetService).Register(router)
 	swagger.NewHandler(ctx).Register(router)
 }
 
 func (c *Controller) Listen(ctx context.Context) error {
-	router := gin.New()
+	router := gin.Default()
 
 	c.registerHandlers(ctx, router.Group("/exoplanetservice"))
 
-	logger.Info("🌏 go-base-service started on 🌎 -> http://localhost:%d/", c.conf.Port)
+	logger.Info(ctx, "explonates service started on --> http://localhost:%d/", c.conf.Port)
 
 	c.server = &http.Server{
 		Addr:         fmt.Sprintf(":%d", c.conf.Port),

@@ -8,5 +8,9 @@ controller:
 service:
     ping: {}
 repository:
-    name: "redis"
-    redis: {}
+    name: "memory" # memory/mongo
+    mongo: 
+        Host: localhost:27017
+        Database: exoplanetservice
+        UserName: bappa
+        Password: bappa

@@ -7,25 +7,32 @@ import (
 )
 
 type Response struct {
-	Message *string `json:"message,omitempty"`
-	Error   *string `json:"error,omitempty"`
-	Data    any     `json:"data,omitempty"`
+	Message    *string `json:"message,omitempty"`
+	Error      *string `json:"error,omitempty"`
+	StatusCode int     `json:"statusCode"`
+	Data       any     `json:"data,omitempty"`
 }
 
 func WriteError(ctx *gin.Context, err error) {
-	errStr := "something went wrong"
-	if customErr, ok := err.(*Error); ok {
-		errStr = customErr.Error()
-		ctx.JSON(customErr.Code, &Response{Error: &errStr})
+	if cErr, ok := err.(*CustomError); ok {
+		ctx.JSON(cErr.StatusCode, Response{Error: &cErr.Message, StatusCode: cErr.StatusCode})
 		return
 	}
-	ctx.JSON(http.StatusInternalServerError, &Response{Error: &errStr})
+	errstr := err.Error()
+	ctx.JSON(http.StatusInternalServerError, Response{StatusCode: http.StatusInternalServerError, Error: &errstr})
 }
 
-func WriteSuccess(ctx *gin.Context, data any) {
-	if msg, ok := data.(string); ok {
-		ctx.JSON(http.StatusOK, &Response{Message: &msg})
+func WriteResponse(ctx *gin.Context, res any) {
+	if msg, ok := res.(string); ok {
+		ctx.JSON(http.StatusOK, Response{Message: &msg, StatusCode: http.StatusOK})
 		return
 	}
-	ctx.JSON(http.StatusOK, &Response{Data: data})
+
+	if data, ok := res.(interface{}); ok {
+		ctx.JSON(http.StatusOK, Response{Data: data, StatusCode: http.StatusOK})
+		return
+	}
+
+	// Default response for unknown types
+	ctx.JSON(http.StatusOK, Response{Data: res, StatusCode: http.StatusOK})
 }
