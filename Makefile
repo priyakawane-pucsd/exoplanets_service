@@ -10,10 +10,10 @@ clean:
 	rm -f application
 
 docker: build-linux
-	docker build -t go-base-service .
+	docker build -t exoplanetservice .
 	rm -f application
 docker-run:
-	docker run -p 8080:8080 go-base-service
+	docker run -p 8083:8083 exoplanetservice
 
 setup:
 	go mod tidy

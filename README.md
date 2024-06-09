@@ -1,72 +1,52 @@
-# Go Base Service
+# ExoplanetService
 
-This is a simple service designed to demonstrate how to structure code in Go.
-
+## Author
+ Priya Kawane 
 <div align="start">
-<img src="golang.png" alt="Go Logo" width="200"/>
+<img src="golang.png" alt="Go Logo" width="100"/>
 </div>
+
+## Description
+
+The problem statement for this service is explained in the PDF located at the root of this repository:
+
+[Problem-Statement.pdf](Problem-Statement.pdf)
 
 ## Prerequisites
 
-- Go version 1.22.4 or above installed
+- Golang version go1.22.4 or later should be installed
 
 ## How to Run
 
-### Local Development
+### Using Makefile
 
-1. **Setup**: Install dependencies and prepare the environment.
-    ```bash
-    make setup
-    ```
+To set up and run the service, use the following commands:
 
-2. **Run the Service**: Start the service locally.
-    ```bash
-    make run
-    ```
-
-### Using Docker
-
-1. **Build and Run with Docker**: Create a Docker image and run the service inside a container.
-    ```bash
-    make docker
-    make docker-run
-    ```
-
-## Project Structure
-
-Here's a basic overview of the project structure:
 ```bash
-├── controller/ # Private application and library code
-│ ├── grpc/ # GRPC controller
-│ ├── http/ # HTTP controller
-│ └── controller.go # is initialisation of controller is here
-├── service/ # business logic
-│ ├── service1/ # service 1 logic is here
-│ ├── ping/ # ping service logic is here
-│ ├── ...
-│ └── service.go # is initialisation of service business logic factory is here
-├── repository/ # data store
-│ ├── mongo/ # mongo repository
-│ ├── mssql/ # mssql repository
-│ ├── ...
-│ └── repository.go # switch of the repository is here
-├── configs/ # Configuration files
-│ └── configs.go # Configuration management
-├── docs/ # Documentation files
-│ └── swagger/ # Swagger files for API documentation
-├── Makefile # Makefile for running tasks
-└── README.md # Project overview (this file)
-└── Dockerfile # for dockerise the application
-└── main.go # start of the application
+make setup
+make run
 ```
 
-## Development Notes
+## Using Docker
 
-- **Configuration**: The configuration settings can be managed in `configs/configs.go`.
-- **Logging**: Ensure proper logging is implemented for easier debugging and monitoring.
-- **Error Handling**: Consistent error handling throughout the codebase.
+To build a Docker image and run the service in a Docker container, use the following commands.
 
-## Developers and contact
-Pavan Yewale
-email: pavanyewale1996@gmail.com
+```bash
+    make docker
+    make docker-run
+```
 
+## Running Unit Tests
+To run unit tests, use the following command:
+```bash
+    make test
+```
+## API Endpoints
+
+To access the api endpoints. please checkout the swagger documentation
+
+http://localhost:8083/exoplanetservice/swagger/index.html
+
+## Notes
+
+Thank You :)
