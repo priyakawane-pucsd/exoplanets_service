@@ -3,12 +3,13 @@ package exoplanets
 import (
 	"context"
 	"exoplanetservice/models/dto"
+	"exoplanetservice/models/filters"
 	"math"
 )
 
 // GetExoplanets retrieves a paginated list of exoplanets.
-func (s *Service) GetExoplanets(ctx context.Context, radius, mass float64, limit, offset int) (*dto.ListExoplanetResponse, error) {
-	exoplanets, err := s.repo.GetExoplanets(ctx, limit, offset)
+func (s *Service) GetExoplanets(ctx context.Context, filter *filters.ExoplanetFilter, limit, offset int) (*dto.ListExoplanetResponse, error) {
+	exoplanets, err := s.repo.GetExoplanets(ctx, filter, limit, offset)
 	if err != nil {
 		return nil, err
 	}

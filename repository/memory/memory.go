@@ -3,6 +3,7 @@ package memory
 import (
 	"context"
 	"exoplanetservice/models/dao"
+	"exoplanetservice/models/filters"
 	"exoplanetservice/utils"
 
 	"github.com/google/uuid"
@@ -24,10 +25,16 @@ func NewRepository(ctx context.Context, cfg *Config) *Repository {
 }
 
 // GetExoplanets retrieves exoplanets with pagination.
-func (r *Repository) GetExoplanets(ctx context.Context, limit int, offset int) ([]*dao.Exoplanets, error) {
+func (r *Repository) GetExoplanets(ctx context.Context, filter *filters.ExoplanetFilter, limit int, offset int) ([]*dao.Exoplanets, error) {
 	var result []*dao.Exoplanets
 	i := 0
 	for _, exoplanet := range r.exoplanets {
+		if filter.Mass != 0 && exoplanet.Mass != filter.Mass {
+			continue
+		}
+		if filter.Radius != 0 && exoplanet.Radius != filter.Radius {
+			continue
+		}
 		if i >= offset && i < offset+limit {
 			result = append(result, &exoplanet)
 		}

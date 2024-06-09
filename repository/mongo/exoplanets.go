@@ -5,6 +5,7 @@ import (
 	"errors"
 	"exoplanetservice/logger"
 	"exoplanetservice/models/dao"
+	"exoplanetservice/models/filters"
 	"exoplanetservice/utils"
 	"time"
 
@@ -36,7 +37,7 @@ func (r *Repository) CreateExoplanets(ctx context.Context, req *dao.Exoplanets) 
 }
 
 // GetExoplanets retrieves a list of exoplanets from the database.
-func (r *Repository) GetExoplanets(ctx context.Context, limit, offset int) ([]*dao.Exoplanets, error) {
+func (r *Repository) GetExoplanets(ctx context.Context, filter *filters.ExoplanetFilter, limit, offset int) ([]*dao.Exoplanets, error) {
 	collection := r.conn.Database(r.cfg.Database).Collection(EXOPLANETS_COLLECTION)
 	findOptions := options.Find().SetLimit(int64(limit)).SetSkip(int64(offset))
 	cursor, err := collection.Find(ctx, bson.M{}, findOptions)

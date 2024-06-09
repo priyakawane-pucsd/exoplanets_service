@@ -1,10 +1,5 @@
 definitions:
-  dto.ExoplanetByIdResponse:
-    properties:
-      exoplanet:
-        $ref: '#/definitions/dto.ExoplanetDTO'
-    type: object
-  dto.ExoplanetDTO:
+  dto.Exoplanet:
     properties:
       created_at:
         type: integer
@@ -25,6 +20,11 @@ definitions:
       updated_at:
         type: integer
     type: object
+  dto.ExoplanetByIdResponse:
+    properties:
+      exoplanet:
+        $ref: '#/definitions/dto.Exoplanet'
+    type: object
   dto.ExoplanetRequest:
     properties:
       description:
@@ -44,7 +44,7 @@ definitions:
     properties:
       exoplanets:
         items:
-          $ref: '#/definitions/dto.ExoplanetDTO'
+          $ref: '#/definitions/dto.Exoplanet'
         type: array
     type: object
   utils.CustomError:
@@ -73,6 +73,16 @@ paths:
         in: query
         name: offset
         type: integer
+      - default: 0
+        description: radius of exoplanet
+        in: query
+        name: radius
+        type: number
+      - default: 0
+        description: mass of exoplanet
+        in: query
+        name: mass
+        type: number
       produces:
       - application/json
       responses:

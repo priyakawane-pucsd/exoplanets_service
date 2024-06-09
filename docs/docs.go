@@ -42,6 +42,20 @@ const docTemplate = `{
                         "description": "Offset for pagination",
                         "name": "offset",
                         "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "default": 0,
+                        "description": "radius of exoplanet",
+                        "name": "radius",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "default": 0,
+                        "description": "mass of exoplanet",
+                        "name": "mass",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -354,15 +368,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.ExoplanetByIdResponse": {
-            "type": "object",
-            "properties": {
-                "exoplanet": {
-                    "$ref": "#/definitions/dto.ExoplanetDTO"
-                }
-            }
-        },
-        "dto.ExoplanetDTO": {
+        "dto.Exoplanet": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -391,6 +397,14 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "integer"
+                }
+            }
+        },
+        "dto.ExoplanetByIdResponse": {
+            "type": "object",
+            "properties": {
+                "exoplanet": {
+                    "$ref": "#/definitions/dto.Exoplanet"
                 }
             }
         },
@@ -423,7 +437,7 @@ const docTemplate = `{
                 "exoplanets": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.ExoplanetDTO"
+                        "$ref": "#/definitions/dto.Exoplanet"
                     }
                 }
             }

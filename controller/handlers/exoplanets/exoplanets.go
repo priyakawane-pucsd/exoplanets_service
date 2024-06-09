@@ -4,6 +4,7 @@ import (
 	"context"
 	"exoplanetservice/logger"
 	"exoplanetservice/models/dto"
+	"exoplanetservice/models/filters"
 	"exoplanetservice/utils"
 	"strconv"
 
@@ -15,7 +16,7 @@ type Config struct {
 
 type Service interface {
 	CreateExoplanets(ctx context.Context, req *dto.ExoplanetRequest) (*dto.Exoplanet, error)
-	GetExoplanets(ctx context.Context, radius, mass float64, limit, offset int) (*dto.ListExoplanetResponse, error)
+	GetExoplanets(ctx context.Context, filter *filters.ExoplanetFilter, limit, offset int) (*dto.ListExoplanetResponse, error)
 	GetExoplanetById(ctx context.Context, exoplanetId string) (*dto.ExoplanetByIdResponse, error)
 	UpdateExoplanetById(ctx context.Context, id string, exoplanet dto.ExoplanetRequest) error
 	DeleteExoplanetById(ctx context.Context, exoplanetId string) error
@@ -83,6 +84,8 @@ func (h *Handler) CreateExoplanets(ctx *gin.Context) {
 // @Produce json
 // @Param limit query int false "Limit the number of exoplanets returned" default(10)
 // @Param offset query int false "Offset for pagination" default(0)
+// @Param radius query float64 false "radius of exoplanet" default(0.0)
+// @Param mass query float64 false "mass of exoplanet" default(0.0)
 // @Success 200 {array} dto.ListExoplanetResponse "List of exoplanets"
 // @Failure 400 {object} utils.CustomError "Invalid request parameters"
 // @Failure 500 {object} utils.CustomError "Internal server error"
@@ -106,20 +109,21 @@ func (h *Handler) GetExoplanets(ctx *gin.Context) {
 		utils.WriteError(ctx, utils.NewBadRequestError("Invalid offset parameter"))
 		return
 	}
+	var filter filters.ExoplanetFilter
 
-	radius, err := strconv.ParseFloat(radiusStr, 64)
+	filter.Radius, err = strconv.ParseFloat(radiusStr, 64)
 	if err != nil {
 		utils.WriteError(ctx, utils.NewBadRequestError("Invalid radius parameter"))
 		return
 	}
 
-	mass, err := strconv.ParseFloat(massStr, 64)
+	filter.Mass, err = strconv.ParseFloat(massStr, 64)
 	if err != nil {
 		utils.WriteError(ctx, utils.NewBadRequestError("Invalid mass parameter"))
 		return
 	}
 
-	exoplanets, err := h.service.GetExoplanets(ctx, radius, mass, limit, offset)
+	exoplanets, err := h.service.GetExoplanets(ctx, &filter, limit, offset)
 	if err != nil {
 		utils.WriteError(ctx, err)
 		return
