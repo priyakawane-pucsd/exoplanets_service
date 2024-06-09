@@ -1,7 +1,4 @@
 # ExoplanetService
-
-## Author
- Priya Kawane 
 <div align="start">
 <img src="golang.png" alt="Go Logo" width="100"/>
 </div>
@@ -49,4 +46,7 @@ http://localhost:8083/exoplanetservice/swagger/index.html
 
 ## Notes
 
+## Author
+Priya Kawane \
+Software Engineer \
 Thank You :)

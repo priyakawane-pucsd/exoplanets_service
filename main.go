@@ -9,7 +9,6 @@ import (
 	"exoplanetservice/service"
 	"flag"
 	"fmt"
-	"log"
 
 	"gopkg.in/yaml.v3"
 )
@@ -35,7 +34,6 @@ func main() {
 
 	// logging config for debug
 	bytes, _ := yaml.Marshal(conf)
-	log.Print()
 	logger.Debug(ctx, "\n%s", bytes)
 
 	// starting application
