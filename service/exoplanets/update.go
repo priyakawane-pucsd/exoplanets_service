@@ -19,8 +19,8 @@ func (s *Service) UpdateExoplanetById(ctx context.Context, id string, updateRequ
 	return nil
 }
 
-func (s *Service) DeleteExoplanetById(ctx context.Context, examId string) error {
-	err := s.repo.DeleteExoplanetById(ctx, examId)
+func (s *Service) DeleteExoplanetById(ctx context.Context, exoplanetId string) error {
+	err := s.repo.DeleteExoplanetById(ctx, exoplanetId)
 	if err != nil {
 		return err
 	}
